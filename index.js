@@ -1,12 +1,26 @@
-'use strict'
+"use strict";
 
-import items from './gallery-items.js';
+import items from "./gallery-items.js";
 
-const gallery = document.querySelector('.gallery');
+const lightbox = document.querySelector(".lightbox");
+const lightboxImage = document.querySelector(".lightbox___image");
+const gallery = document.querySelector(".gallery");
+const closeButton = document.querySelector(
+  'button[data-action="close-lightbox"]'
+);
+const backdropSpace = document.querySelector(".lightbox__content");
+
+gallery.addEventListener("click", openModal);
+closeButton.addEventListener("click", closeModalWindow);
+backdropSpace.addEventListener("click", handleBackdropClick);
+
+addGalleryFromArray(items);
 
 function addGalleryFromArray(array) {
   array.forEach(item => {
-    gallery.insertAdjacentHTML("afterbegin", `<li class="gallery__item">
+    gallery.insertAdjacentHTML(
+      "afterbegin",
+      `<li class="gallery__item">
     <a
       class="gallery__link"
       href="${item.original}"
@@ -22,23 +36,37 @@ function addGalleryFromArray(array) {
         <i class="material-icons">zoom_out_map</i>
       </span>
     </a>
-  </li>`)
-  })
+  </li>`
+    );
+  });
 }
 
-addGalleryFromArray(items)
+function openModal(event) {
+  window.addEventListener("keydown", handleKeyPress);
+  event.preventDefault();
 
-gallery.addEventListener('click', openFullImage)
-
-function openFullImage() {
   const target = event.target;
   if (target.nodeName !== "IMG") return;
 
-  setActiveImage()
+  lightboxImage.src = target.dataset.source;
+  lightbox.classList.add("is-open");
 }
 
-
-setActiveImage() {
-
+function closeModalWindow() {
+  window.removeEventListener("keydown", handleKeyPress);
+  lightbox.classList.remove("is-open");
 }
-// console.log(openFullImage())
+
+function handleBackdropClick(event) {
+  if (event.target !== event.currentTarget) {
+    return;
+  }
+  closeModalWindow();
+}
+
+function handleKeyPress(event) {
+  if (event.code !== "Escape") {
+    return;
+  }
+  closeModalWindow();
+}
