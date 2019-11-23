@@ -10,6 +10,7 @@ const closeButton = document.querySelector(
 );
 const backdropSpace = document.querySelector(".lightbox__content");
 
+
 gallery.addEventListener("click", openModal);
 closeButton.addEventListener("click", closeModalWindow);
 backdropSpace.addEventListener("click", handleBackdropClick);
@@ -55,6 +56,7 @@ function openModal(event) {
 function closeModalWindow() {
   window.removeEventListener("keydown", handleKeyPress);
   lightbox.classList.remove("is-open");
+  lightboxImage.src = ""
 }
 
 function handleBackdropClick(event) {
